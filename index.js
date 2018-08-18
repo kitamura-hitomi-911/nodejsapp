@@ -1,10 +1,17 @@
 var express = require('express');
-var app = express();
+var ejs = require('ejs');
 
-app.get('/',(req,res)=> {
-	res.send('Hello, world!');
+var app = express();
+app.engine('ejs',ejs.renderFile);
+
+app.get('/', (req, res) => {
+	res.render('index.ejs',
+		{
+			title:'トップ',
+			lead:'リード文'
+		});
 });
 
-app.listen(3000,()=>{
-	console.log('サーバー起動');
+var server = app.listen(3000, () => {
+	console.log('サーバー起動')
 });
