@@ -9,7 +9,7 @@ router.get('/', function(req, res, next){
 	db.serialize(() => {
 		db.all("select * from users", (err, rows) => {
 			if(!err){
-				console.log(rows);
+				// console.log(rows);
 				res.render('index', {title: 'Express'});
 			}
 		})

@@ -15,8 +15,10 @@ var UsersData = Bookshelf.Model.extend({
 /* GET login page. */
 router.get('/', function(req, res, next){
 	console.log('login get');
+	var rturl = req.query.rturl || '';
 	res.render('login', {
 		form: {
+			rturl:rturl,
 			err: '',
 			id: ''
 		}
@@ -24,8 +26,10 @@ router.get('/', function(req, res, next){
 });
 router.post('/',function(req, res, next){
 	console.log('login post');
+	var rturl = req.body.rturl && req.body.rturl.match(/^\//) ? req.body.rturl : '/';
 	var assign_obj = {
 		form: {
+			rturl:rturl,
 			err: '',
 			mail:req.body.mail || ''
 		}
@@ -37,21 +41,17 @@ router.post('/',function(req, res, next){
 		return;
 	}
 	new UsersData().where('mail','=',req.body.mail).fetch().then((collection)=>{
-
-		// collection.models.forEach(function(model){
-		// 	console.log(model.attributes);
-		// });
 		if(collection){
 			if(collection.attributes.password === req.body.password){
 				console.log('アカウントあり');
 				req.session.user_id = collection.attributes.id;
-				res.render('login', assign_obj);
+				res.redirect(decodeURIComponent(rturl));
 			}else{
 				assign_obj.form.err = 'メールアドレスもしくはパスワードが違います。';
 				res.render('login', assign_obj);
 			}
 		}else{
-			assign_obj.form.err = '入力いただいたメールアドレスでのアカウントはありません。';
+			assign_obj.form.err = 'メールアドレスもしくはパスワードが違います。';
 			res.render('login', assign_obj);
 		}
 
