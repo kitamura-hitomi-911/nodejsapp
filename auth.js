@@ -1,5 +1,6 @@
 module.exports = function(req, res, next) {
 
+
 	var rturl = req.query.rturl && req.query.rturl.match(/^\//) ? req.query.rturl : '/';
 
 	// ログアウト

@@ -12,32 +12,31 @@ var UsersData = Bookshelf.Model.extend({
 	tableName:'users'
 });
 
+var assignObj = require('../assignObj');
+
 /* GET login page. */
 router.get('/', function(req, res, next){
 	console.log('login get');
 	var rturl = req.query.rturl || '';
-	res.render('login', {
-		form: {
-			rturl:rturl,
-			err: '',
-			id: ''
-		}
+	assignObj.set('form',{
+		rturl:rturl,
+		err: '',
+		mail: ''
 	});
+	var rturl = req.query.rturl || '';
+	res.render('login', assignObj.get());
 });
 router.post('/',function(req, res, next){
 	console.log('login post');
 	var rturl = req.body.rturl && req.body.rturl.match(/^\//) ? req.body.rturl : '/';
-	var assign_obj = {
-		form: {
-			rturl:rturl,
-			err: '',
-			mail:req.body.mail || ''
-		}
-	};
-	console.log(assign_obj);
+	assignObj.set('form',{
+		rturl:rturl,
+		err: '',
+		mail:req.body.mail || ''
+	});
 	if(!req.body.mail || !req.body.password){
-		assign_obj.form.err = 'メールアドレス・パスワードを入力してください。';
-		res.render('login', assign_obj);
+		assignObj.set('form.err','メールアドレス・パスワードを入力してください。');
+		res.render('login', assignObj.get());
 		return;
 	}
 	new UsersData().where('mail','=',req.body.mail).fetch().then((collection)=>{
@@ -47,12 +46,12 @@ router.post('/',function(req, res, next){
 				req.session.user_id = collection.attributes.id;
 				res.redirect(decodeURIComponent(rturl));
 			}else{
-				assign_obj.form.err = 'メールアドレスもしくはパスワードが違います。';
-				res.render('login', assign_obj);
+				assignObj.set('form.err','メールアドレスもしくはパスワードが違います');
+				res.render('login', assignObj.get());
 			}
 		}else{
-			assign_obj.form.err = 'メールアドレスもしくはパスワードが違います。';
-			res.render('login', assign_obj);
+			assignObj.set('form.err','メールアドレスもしくはパスワードが違います');
+			res.render('login', assignObj.get());
 		}
 
 	}).catch((err)=>{
