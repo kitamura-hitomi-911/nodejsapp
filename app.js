@@ -10,6 +10,7 @@ var validator = require('express-validator');
 var logger = require('morgan'); // HTTPリクエストのログを吐き出す
 
 var loginRouter = require('./routes/login');
+var logoutRouter = require('./routes/logout');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -27,10 +28,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(validator());
 
 var session_opt = {
-	secret:'keyboard cat',
-	resave:false,
-	saveUninitialized: false,
-	cookie:{maxAge:60 * 60 * 1000} // 最後のアクセスから1時間セッション保持
+	secret:'secret', // 指定した文字列を使ってクッキーIDを暗号化しクッキーIDが書き換えらているかを判断
+	resave:false, // セッションにアクセスすると上書きされるオプション
+	saveUninitialized: false, // 未初期化状態のセッションも保存するようなオプション
+	cookie:{
+		httpOnly:true, // クライアント側でクッキー値を見れない、書きかえれないようにするオプション
+		secure:false, // httpsで使用する場合はtrue
+		maxAge:60 * 60 * 1000 // 最後のアクセスから1時間セッション保持
+	}
 };
 app.use(session(session_opt));
 
@@ -39,6 +44,7 @@ app.use(require('./auth'));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
+app.use('/logout', logoutRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

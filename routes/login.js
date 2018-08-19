@@ -44,6 +44,7 @@ router.post('/',function(req, res, next){
 		if(collection){
 			if(collection.attributes.password === req.body.password){
 				console.log('アカウントあり');
+				req.session.user_id = collection.attributes.id;
 				res.render('login', assign_obj);
 			}else{
 				assign_obj.form.err = 'メールアドレスもしくはパスワードが違います。';
