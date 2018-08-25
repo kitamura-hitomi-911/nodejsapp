@@ -1,4 +1,9 @@
-var obj = {};
+var obj = {
+	user:{
+		is_login:false,
+		name:''
+	}
+};
 var assignObj = {
 	set:function(key,value){
 		var current_obj = obj;
