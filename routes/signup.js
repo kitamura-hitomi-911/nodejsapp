@@ -46,7 +46,9 @@ router.post('/',function(req, res, next){
 		return;
 	}
 	// 登録済みのメールアドレスかどうか確認
+	/*
 	new UsersData().where('mail','=',req.body.mail).fetch().then((collection)=>{
+		var is_already_registed = false;
 		if(collection){
 			if(collection.attributes.mail === req.body.mail){
 				console.log('すでに登録済みのメールアドレス');
@@ -54,10 +56,34 @@ router.post('/',function(req, res, next){
 				res.render('signup', assignObj.get());
 			}
 		}
+		if(is_already_registed){
+
+		}else{
+
+		}
 
 	}).catch((err)=>{
 		console.log('then error',err);
 		res.status(500).json({error:true,data:{massage:err.message}});
+	});
+	*/
+
+	// 登録処理
+	var save_data = {
+		name: req.body.name,
+		mail:req.body.mail,
+		password: req.body.password,
+		comment: req.body.comment
+	};
+	new UsersData(save_data).save().then(model => {
+		console.log(model);
+		res.render('signup', assignObj.get());
+	}).catch((err)=>{
+		console.log('then error',err.message);
+		for(var i in err){
+			console.log(i,err[i]);
+		}
+		res.render('signup', assignObj.get());
 	});
 
 
