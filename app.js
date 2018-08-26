@@ -9,8 +9,8 @@ var session = require('express-session'); // セッションを利用
 var validator = require('express-validator');
 var logger = require('morgan'); // HTTPリクエストのログを吐き出す
 
+// アサインする変数
 var assignObj = require('./assignObj');
-assignObj.set('hoge','fuga');
 
 var loginRouter = require('./routes/login');
 var logoutRouter = require('./routes/logout');

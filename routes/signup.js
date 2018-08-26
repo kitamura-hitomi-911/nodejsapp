@@ -46,45 +46,45 @@ router.post('/',function(req, res, next){
 		return;
 	}
 	// 登録済みのメールアドレスかどうか確認
-	/*
+
 	new UsersData().where('mail','=',req.body.mail).fetch().then((collection)=>{
 		var is_already_registed = false;
 		if(collection){
 			if(collection.attributes.mail === req.body.mail){
-				console.log('すでに登録済みのメールアドレス');
-				assignObj.set('form.err.mail','すでに登録済みのメールアドレスです');
-				res.render('signup', assignObj.get());
+				is_already_registed = true;
 			}
 		}
 		if(is_already_registed){
-
+			console.log('すでに登録済みのメールアドレス');
+			assignObj.set('form.err.mail','すでに登録済みのメールアドレスです');
+			res.render('signup', assignObj.get());
 		}else{
+			// 登録処理
+			var save_data = {
+				name: req.body.name,
+				mail:req.body.mail,
+				password: req.body.password,
+				comment: req.body.comment
+			};
+			var rturl = req.body.rturl && req.body.rturl.match(/^\//) ? req.body.rturl : '/';
+			new UsersData(save_data).save().then(model => {
+				console.log(model);
+				req.session.user_id = model.attributes.id;
+				res.redirect(decodeURIComponent(rturl));
 
+			}).catch((err)=>{
+				console.log('then error',err.message);
+				assignObj.set('form.err.lead',err.message);
+				res.render('signup', assignObj.get());
+			});
 		}
-
 	}).catch((err)=>{
 		console.log('then error',err);
 		res.status(500).json({error:true,data:{massage:err.message}});
 	});
-	*/
 
-	// 登録処理
-	var save_data = {
-		name: req.body.name,
-		mail:req.body.mail,
-		password: req.body.password,
-		comment: req.body.comment
-	};
-	new UsersData(save_data).save().then(model => {
-		console.log(model);
-		res.render('signup', assignObj.get());
-	}).catch((err)=>{
-		console.log('then error',err.message);
-		for(var i in err){
-			console.log(i,err[i]);
-		}
-		res.render('signup', assignObj.get());
-	});
+
+
 
 
 });

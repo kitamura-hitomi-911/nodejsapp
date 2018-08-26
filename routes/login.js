@@ -41,7 +41,7 @@ router.post('/',function(req, res, next){
 	}
 	new UsersData().where('mail','=',req.body.mail).fetch().then((collection)=>{
 		if(collection){
-			if(collection.attributes.password === req.body.password){
+			if(String(collection.attributes.password) === req.body.password){
 				console.log('アカウントあり');
 				req.session.user_id = collection.attributes.id;
 				res.redirect(decodeURIComponent(rturl));
