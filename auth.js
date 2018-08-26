@@ -28,6 +28,7 @@ module.exports = function(req, res, next) {
 		new UsersData().where('id','=',req.session.user_id).fetch().then((collection)=>{
 			if(collection){
 				assignObj.set('user.is_login',true);
+				assignObj.set('user.id',collection.attributes.id);
 				assignObj.set('user.name',collection.attributes.name);
 				assignObj.set('user.comment',collection.attributes.comment);
 
