@@ -9,8 +9,15 @@ var knex = require('knex')({
 	useNullAsDefault:true
 });
 var Bookshelf = require('bookshelf')(knex);
+var UsersData = Bookshelf.Model.extend({
+	tableName:'users'
+});
 var MessagesData = Bookshelf.Model.extend({
-	tableName:'messages'
+	tableName:'messages',
+	hasTimestamps:true,
+	user:function(){
+		return this.belongsTo(UsersData);
+	}
 });
 
 var assignObj = require('../assignObj');

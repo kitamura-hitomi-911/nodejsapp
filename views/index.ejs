@@ -16,6 +16,20 @@
 				<p class="btn"><a href="#" onclick="document.frm.submit();return false;">送信</a></p>
 			</form>
 		</div>
+		<div class="messages">
+			<ul>
+				<% for(var i in messages){ %>
+					<li>
+						<dl>
+							<dt><%= messages[i].attributes.message %></dt>
+							<dd class="user"><%= messages[i].relations.user.attributes.name %></dd>
+							<dd class="date"><%= messages[i].attributes.created_at %></dd>
+						</dl>
+
+					</li>
+				<% } %>%>
+			</ul>
+		</div>
 	</div>
 </div>
 </body>
